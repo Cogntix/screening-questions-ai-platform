@@ -1,20 +1,19 @@
+const pdfjsLib = require("pdfjs-dist");
 const fs = require("fs");
-const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
 
-const parsePDFWithPDFJS = async (filePath) => {
-  const pdfBuffer = fs.readFileSync(filePath);
-  const loadingTask = pdfjsLib.getDocument({ data: pdfBuffer });
-  const pdfDocument = await loadingTask.promise;
+async function extractTextFromPDF(filePath) {
+  const data = new Uint8Array(fs.readFileSync(filePath));
+  const pdf = await pdfjsLib.getDocument({ data }).promise;
 
-  let fullText = "";
-  for (let i = 1; i <= pdfDocument.numPages; i++) {
-    const page = await pdfDocument.getPage(i);
+  let text = "";
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const strings = content.items.map(item => item.str).join(" ");
-    fullText += strings + "\n";
+    const pageText = content.items.map(item => item.str).join(" ");
+    text += pageText + "\n";
   }
 
-  return fullText;
-};
+  return text;
+}
 
-module.exports = { parsePDFWithPDFJS };
+module.exports = { extractTextFromPDF };
