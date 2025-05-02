@@ -22,7 +22,7 @@ exports.uploadPDFAndGenerateQuestions = async (req, res) => {
 
     // Step 2: Create structured OpenAI prompt
     const prompt = `
-You are an exam paper generator.
+You are a a JSON-only exam paper generator.
 
 Generate 100 domain-relevant assessment questions for the following internship position.
 Ensure the set includes a mix of:
@@ -33,7 +33,7 @@ Internship Position: ${position}
 Knowledge Content:
 ${extractedText}
 
-Format:
+Format your response as **JSON only**:
 [
   {
     "questionText": "...",
@@ -43,6 +43,9 @@ Format:
   },
   ...
 ]
+  Domain Knowledge:
+${extractedText}
+Do not include any explanation or extra text outside the JSON.
 `;
 
     // Step 3: Call OpenAI API
@@ -59,13 +62,15 @@ Format:
     
     const raw = response.choices[0].message.content;
     
-
+    console.log("OpenAI raw response:", raw);
 
     let questions = [];
     try {
       questions = JSON.parse(raw);
     } catch (err) {
-      return res.status(500).json({ message: "OpenAI response not parsable. Try again." });
+      return res.status(500).json({ message: "OpenAI response not parsable. Try again.",
+        rawResponse: raw 
+       });
     }
 
     // Step 4: Save Position

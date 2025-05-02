@@ -6,7 +6,6 @@ const Result = require("../models/Result");
 const Candidate = require("../models/Candidate");
 const openai = require("../utils/openai");
 
-// 1. Admin Login (No JWT)
 exports.adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -46,7 +45,6 @@ exports.getQuestionsByPosition = async (req, res) => {
     res.status(500).json({ message: "Database error" });
   }
 };
-
 // 4. Regenerate 100 Questions for a Position
 exports.regenerateQuestions = async (req, res) => {
   try {
