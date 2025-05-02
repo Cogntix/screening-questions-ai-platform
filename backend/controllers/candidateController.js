@@ -48,3 +48,14 @@ exports.createCandidate = async (req, res) => {
     res.status(500).json({ message: "Server error while creating candidate." });
   }
 };
+// controllers/candidateController.js
+exports.getAllCandidates = async (req, res) => {
+    try {
+      const candidates = await Candidate.find().populate("positionId", "positionName");
+      res.json(candidates);
+    } catch (err) {
+      console.error("Error fetching candidates:", err);
+      res.status(500).json({ message: "Error fetching candidates" });
+    }
+  };
+  
