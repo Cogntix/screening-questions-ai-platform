@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import DashboardNavArrows from "./DashboardNavArrows";
+import { useNavigate } from "react-router-dom";
+
+
 
 const AddInternPage = () => {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [positionId, setPositionId] = useState("");
   const [positions, setPositions] = useState([]);
   const [popup, setPopup] = useState(null);
   const [error, setError] = useState(null);
+ 
 
   useEffect(() => {
     const fetchPositions = async () => {
@@ -55,9 +61,9 @@ const AddInternPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4">
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl">
-        <h1 className="text-2xl font-bold text-center text-green-700 mb-6">
+        <h1 className="text-2xl font-bold text-center text-blue-700 mb-6">
           Add Intern Details
         </h1>
 
@@ -71,7 +77,7 @@ const AddInternPage = () => {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
-              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-green-300"
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
 
@@ -82,7 +88,7 @@ const AddInternPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-green-300"
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
 
@@ -92,7 +98,7 @@ const AddInternPage = () => {
               value={positionId}
               onChange={(e) => setPositionId(e.target.value)}
               required
-              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-green-300"
+              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="">-- Choose Position --</option>
               {positions.map((pos) => (
@@ -105,21 +111,22 @@ const AddInternPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
           >
             Create Candidate
           </button>
         </form>
+        <DashboardNavArrows backTo="/dashboard" />
       </div>
 
       {/* Popup Modal */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full text-center relative">
-            <h2 className="text-xl font-bold text-green-700 mb-4">{popup.message}</h2>
+            <h2 className="text-xl font-bold text-blue-700 mb-4">{popup.message}</h2>
             <p className="text-sm text-gray-700 mb-2">
               <strong>Test Link:</strong><br />
-              <span className="text-blue-600 break-all">{popup.link}</span>
+              <span className="text-gray-600 break-all">{popup.link}</span>
               <button
                 onClick={() => copyToClipboard(popup.link)}
                 className="ml-2 text-xs text-blue-500 underline"
@@ -137,14 +144,19 @@ const AddInternPage = () => {
               </button>
             </p>
             <button
-              onClick={() => setPopup(null)}
-              className="mt-2 px-4 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-            >
-              Done
-            </button>
+  onClick={() => {
+    setPopup(null);
+    navigate("/dashboard");
+  }}
+  className="mt-2 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+>
+  Done
+</button>
           </div>
         </div>
+
       )}
+      
     </div>
   );
 };

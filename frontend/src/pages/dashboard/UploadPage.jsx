@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import DashboardNavArrows from "./DashboardNavArrows";
 
 const UploadPage = () => {
   const [pdfFile, setPdfFile] = useState(null);
@@ -7,20 +8,20 @@ const UploadPage = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const internshipOptions = [
-    "Software Engineering Intern",
-    "Frontend Developer Intern",
-    "Backend Developer Intern",
-    "Full-Stack Developer Intern",
-    "Data Science Intern",
-    "Machine Learning/AI Intern",
-    "Mobile App Developer Intern",
-    "UI/UX Design Intern",
-    "DevOps Intern",
-    "Quality Assurance (QA) Intern",
-    "Business Analyst Intern",
-    "Product Management Intern"
-  ];
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchAddedPositions = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/added-positions`);
+        setOptions(res.data);
+      } catch (err) {
+        console.error("Failed to load added positions");
+      }
+    };
+    fetchAddedPositions();
+  }, []);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,16 +62,17 @@ const UploadPage = () => {
           <div>
             <label className="block text-gray-700 font-medium mb-1">Select Internship Position</label>
             <select
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              required
-            >
-              <option value="">-- Choose a Position --</option>
-              {internshipOptions.map((opt, idx) => (
-                <option key={idx} value={opt}>{opt}</option>
-              ))}
-            </select>
+  value={position}
+  onChange={(e) => setPosition(e.target.value)}
+  required
+  className="w-full border p-2 rounded"
+>
+  <option value="">-- Choose a Position --</option>
+  {options.map((opt) => (
+    <option key={opt._id} value={opt.positionName}>{opt.positionName}</option>
+  ))}
+</select>
+
           </div>
 
           <div>
@@ -94,6 +96,7 @@ const UploadPage = () => {
             {loading ? "Uploading..." : "Upload PDF & Generate Questions"}
           </button>
         </form>
+        <DashboardNavArrows backTo="/dashboard" />
       </div>
     </div>
   );
