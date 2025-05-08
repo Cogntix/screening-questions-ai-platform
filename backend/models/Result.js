@@ -12,7 +12,19 @@ const resultSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Question"
       },
-      selectedOptions: [Number]  // indexes chosen by the candidate
+      questionType: {
+        type: String,
+        required: true
+      },
+      options: {
+        type: [String],
+        required: true
+      },
+      selectedAnswers: {
+        type: [Number],
+        default: []
+      },  
+      correctAnswers: [Number] ,  
     }
   ],
   score: {
@@ -21,6 +33,10 @@ const resultSchema = new mongoose.Schema({
   },
   feedback: {
     type: String
+  },
+  timeTaken: {
+    type: Number, 
+    required: true
   },
   submittedAt: {
     type: Date,

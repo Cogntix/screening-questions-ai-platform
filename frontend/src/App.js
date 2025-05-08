@@ -12,6 +12,7 @@ import ViewResultsPage from "./pages/dashboard/ViewResultsPage";
 import CandidateLoginPage from "./components/CandidateLoginPage";
 import CandidateTestPage from "./components/CandidateTestPage";
 import CandidateSubmittedPage from "./components/CandidateSubmittedPage";
+import AdminViewResultDetail from "./pages/dashboard/AdminViewResultDetail";
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
         <Route path="/dashboard/view-interns" element={<ViewInternsPage />} />
         <Route path="/dashboard/view-positions" element={<ViewPositionPage />} />
         <Route path="/dashboard/view-results" element={<ViewResultsPage />} />
+        <Route path="/admin/results/view/:resultId" element={<AdminViewResultDetail />} />
+
 
         {/* Candidate routes */}
         <Route path="/test/:token" element={<CandidateLoginPage />} />

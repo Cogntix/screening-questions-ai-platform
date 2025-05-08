@@ -53,9 +53,9 @@ const AdminDashboard = () => {
         <div className="text-center">
           <button
             onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-full text-sm font-medium shadow-md transition-all"
+            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-8 rounded text-sm font-medium shadow-md transition-all"
           >
-            🚪 Logout
+             Logout
           </button>
         </div>
       </div>

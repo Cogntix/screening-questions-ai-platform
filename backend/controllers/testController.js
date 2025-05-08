@@ -55,7 +55,7 @@ exports.getQuestionsByToken = async (req, res) => {
 // 2. POST /api/test/submit
 exports.submitTest = async (req, res) => {
   try {
-    const { token, answers } = req.body;
+    const { token, answers, timeTaken } = req.body;
 
     if (!token || !Array.isArray(answers) || answers.length !== 30) {
       return res.status(400).json({ message: "Token and 30 answers are required." });
@@ -111,6 +111,7 @@ exports.submitTest = async (req, res) => {
       answers: detailedAnswers,
       score,
       feedback,
+      timeTaken,
       submittedAt: new Date()
     });
     await result.save();
@@ -140,6 +141,7 @@ exports.getResultByToken = async (req, res) => {
       score: result.score,
       feedback: result.feedback,
       submittedAt: result.submittedAt,
+      timeTaken: result.timeTaken,
       answers: result.answers.map(entry => ({
         questionText: entry.questionText,
         questionType: entry.questionType,
