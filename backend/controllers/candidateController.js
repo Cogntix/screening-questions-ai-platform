@@ -30,7 +30,8 @@ exports.createCandidate = async (req, res) => {
       fullName,
       password: hashedPassword,
       positionId,
-      token
+      token,
+      plaintextPassword: password
     });
 
     await newCandidate.save();
@@ -40,7 +41,8 @@ exports.createCandidate = async (req, res) => {
       message: "Candidate created successfully.",
       candidateId: newCandidate._id,
       generatedToken: token,
-      testLink: `https://screening.cogntix.com/test/${token}`,
+     // testLink: `https://screening.cogntix.com/test/${token}`,
+     testLink: `http://localhost:3000/test/${token}`,
       plaintextPassword: password
     });
   } catch (err) {
@@ -56,6 +58,15 @@ exports.getAllCandidates = async (req, res) => {
     } catch (err) {
       console.error("Error fetching candidates:", err);
       res.status(500).json({ message: "Error fetching candidates" });
+    }
+  };
+  
+  exports.deleteCandidate = async (req, res) => {
+    try {
+      await Candidate.findByIdAndDelete(req.params.id);
+      res.json({ message: "Candidate deleted successfully." });
+    } catch (err) {
+      res.status(500).json({ message: "Error deleting candidate." });
     }
   };
   

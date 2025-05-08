@@ -71,14 +71,30 @@ exports.submitTest = async (req, res) => {
     questionMap.forEach(q => (questionById[q._id.toString()] = q));
 
     // Calculate score
+    
+    const detailedAnswers = []; // new detailed answer array
+// new detailed answer array
     let score = 0;
-    for (let ans of answers) {
+    
+    for (let ans of req.body.answers) {
       const q = questionById[ans.questionId];
       if (!q) continue;
+    
       const correct = q.correctAnswers.sort().toString();
       const submitted = ans.selected.sort().toString();
-      if (correct === submitted) score++;
+      const isCorrect = correct === submitted;
+      if (isCorrect) score++;
+    
+      detailedAnswers.push({
+        questionId: q._id,
+        questionText: q.questionText,
+        questionType: q.questionType,
+        options: q.options,
+        selectedAnswers: ans.selected,
+        correctAnswers: q.correctAnswers
+      });
     }
+    
 
     // Optional: Generate feedback via OpenAI
     const prompt = `Evaluate this intern's knowledge based on a score of ${score}/30. Provide short, professional feedback.`;
@@ -92,7 +108,7 @@ exports.submitTest = async (req, res) => {
 
     const result = new Result({
       candidateId: candidate._id,
-      answers,
+      answers: detailedAnswers,
       score,
       feedback,
       submittedAt: new Date()
@@ -118,32 +134,19 @@ exports.getResultByToken = async (req, res) => {
     const result = await Result.findOne({ candidateId: candidate._id });
     if (!result) return res.status(404).json({ message: "Result not found." });
 
-    // Fetch full question objects
-    const questionIds = result.answers.map(a => a.questionId);
-    const questionDocs = await Question.find({ _id: { $in: questionIds } });
-    const questionMap = {};
-    questionDocs.forEach(q => {
-      questionMap[q._id.toString()] = q;
-    });
-
-    const detailedAnswers = result.answers.map(entry => {
-      const q = questionMap[entry.questionId.toString()];
-      return {
-        questionText: q?.questionText,
-        options: q?.options,
-        correctAnswers: q?.correctAnswers,
-        selectedOptions: entry.selected
-      };
-    });
-
-
     res.json({
       candidateName: candidate.fullName,
       positionId: candidate.positionId,
       score: result.score,
       feedback: result.feedback,
       submittedAt: result.submittedAt,
-      answers: detailedAnswers
+      answers: result.answers.map(entry => ({
+        questionText: entry.questionText,
+        questionType: entry.questionType,
+        options: entry.options,
+        correctAnswers: entry.correctAnswers,
+        selectedOptions: entry.selectedAnswers
+      }))
     });
   } catch (err) {
     console.error(err);

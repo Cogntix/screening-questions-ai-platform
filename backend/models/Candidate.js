@@ -19,6 +19,9 @@ const candidateSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  plaintextPassword: {
+    type: String
+  },
   hasSubmitted: {
     type: Boolean,
     default: false

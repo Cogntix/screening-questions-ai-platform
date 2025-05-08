@@ -5,6 +5,7 @@ const Question = require("../models/Question");
 const { extractTextFromPDF } = require("../utils/pdfParser");
 const openai = require("../utils/openai");
 
+
 exports.uploadPDFAndGenerateQuestions = async (req, res) => {
   try {
     const { position } = req.body;
@@ -21,57 +22,70 @@ exports.uploadPDFAndGenerateQuestions = async (req, res) => {
     }
 
     // Step 2: Create structured OpenAI prompt
-    const prompt = `
-You are a a JSON-only exam paper generator.
+// inside uploadPDFAndGenerateQuestions
+const questions = [];
+const batchSize = 25;
+const totalBatches = 4;
 
-Generate 100 domain-relevant assessment questions for the following internship position.
-Ensure the set includes a mix of:
-- Single-select multiple choice questions (MCQs)
-- Multi-select questions (where more than one option may be correct)
+for (let i = 0; i < totalBatches; i++) {
+  const prompt = `
+You are a JSON-only exam question generator.
+
+Generate exactly ${batchSize} domain-relevant assessment questions for the internship position below:
 
 Internship Position: ${position}
-Knowledge Content:
+
+Knowledge Extracted from PDF:
 ${extractedText}
 
-Format your response as **JSON only**:
+Format your response as a JSON array like:
 [
   {
-    "questionText": "...",
+    "questionText": "....",
     "questionType": "single" or "multi",
     "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correctAnswers": [0] //  use indices of correct options, e.g., [1, 2] for multi-select
+    "correctAnswers": [0]
   },
   ...
 ]
-  Domain Knowledge:
-${extractedText}
-Do not include any explanation or extra text outside the JSON.
+
+Guidelines:
+- Each question must have exactly 4 options.
+- Do NOT include explanations or extra text.
+- Ensure each question is unique.
+- Mix of single-select and multi-select.
+
+Return only valid JSON.
 `;
 
-    // Step 3: Call OpenAI API
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7
-    });
-    
-    // Ensure response is valid
-    if (!response || !response.choices || !response.choices[0]?.message?.content) {
-      return res.status(500).json({ message: "OpenAI did not return valid question data." });
-    }
-    
-    const raw = response.choices[0].message.content;
-    
-    console.log("OpenAI raw response:", raw);
+  const response = await openai.chat.completions.create({
+    model: "gpt-4",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.7
+  });
 
-    let questions = [];
-    try {
-      questions = JSON.parse(raw);
-    } catch (err) {
-      return res.status(500).json({ message: "OpenAI response not parsable. Try again.",
-        rawResponse: raw 
-       });
+  const raw = response.choices[0]?.message?.content;
+
+  try {
+    const parsed = JSON.parse(raw);
+    const validQuestions = parsed.filter(
+      (q) => Array.isArray(q.options) && q.options.length === 4
+    );
+    
+    questions.push(...validQuestions);
+    
+    if (validQuestions.length < batchSize) {
+      console.warn(`Batch ${i + 1} returned only ${validQuestions.length} valid questions`);
     }
+    
+  } catch (err) {
+    return res.status(500).json({
+      message: `Failed to parse OpenAI response for batch ${i + 1}`,
+      rawResponse: raw
+    });
+  }
+}
+
 
     // Step 4: Save Position
     const newPosition = new Position({
@@ -104,3 +118,5 @@ Do not include any explanation or extra text outside the JSON.
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+

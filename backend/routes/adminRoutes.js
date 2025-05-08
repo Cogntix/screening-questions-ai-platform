@@ -5,7 +5,8 @@ const {
   getQuestionsByPosition,
   regenerateQuestions,
   getAllResults,
-  getResultById
+  getResultById,
+  createPosition
 } = require("../controllers/adminController");
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.post("/login", adminLogin);
 
 // GET /api/positions
 router.get("/positions", getAllPositions);
+
 
 // GET /api/positions/:positionId/questions
 router.get("/positions/:positionId/questions", getQuestionsByPosition);
