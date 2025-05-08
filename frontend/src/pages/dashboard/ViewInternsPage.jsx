@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardNavArrows from "./DashboardNavArrows";
-import { Trash2 } from "lucide-react"; // You can use another icon lib if preferred
+import { Trash2 } from "lucide-react"; 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -70,7 +70,7 @@ const ViewInternsPage = () => {
               </thead>
               <tbody>
                 {interns.map((intern, index) => {
-                  const testLink = `http://localhost:3000/test/${intern.token}`;
+                  const testLink = `https://screening.cogntix.com/test/${intern.token}`;
                   return (
                     <tr key={intern._id} className="hover:bg-gray-50">
                       <td className="p-2 border">{index + 1}</td>

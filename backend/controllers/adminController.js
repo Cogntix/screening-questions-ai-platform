@@ -114,6 +114,7 @@ exports.getAllResults = async (req, res) => {
       .populate({ path: "candidateId", populate: { path: "positionId", select: "positionName" } });
 
     const formatted = results.map(r => ({
+      _id: r._id, 
       candidateName: r.candidateId.fullName,
       positionName: r.candidateId.positionId?.positionName,
       score: r.score,
@@ -142,7 +143,8 @@ exports.getResultById = async (req, res) => {
       score: result.score,
       feedback: result.feedback,
       answers: result.answers,
-      submittedAt: result.submittedAt
+      submittedAt: result.submittedAt,
+      timeTaken: result.timeTaken
     });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch detailed result" });

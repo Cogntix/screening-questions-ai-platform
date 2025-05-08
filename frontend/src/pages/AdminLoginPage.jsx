@@ -17,7 +17,6 @@ const AdminLoginPage = () => {
         `${process.env.REACT_APP_API_BASE_URL}/login`,
         { email, password }
       );
-      // Navigate silently without alert
       navigate("/dashboard");
     } catch (err) {
       const message = err.response?.data?.message || "Login failed.";

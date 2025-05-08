@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
  
 
 const CandidateSubmittedPage = () => {
-  const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [durationMinutes, setDurationMinutes] = useState(null);

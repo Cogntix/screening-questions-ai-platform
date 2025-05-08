@@ -41,8 +41,7 @@ exports.createCandidate = async (req, res) => {
       message: "Candidate created successfully.",
       candidateId: newCandidate._id,
       generatedToken: token,
-     // testLink: `https://screening.cogntix.com/test/${token}`,
-     testLink: `http://localhost:3000/test/${token}`,
+      testLink: `https://screening.cogntix.com/test/${token}`,
       plaintextPassword: password
     });
   } catch (err) {
