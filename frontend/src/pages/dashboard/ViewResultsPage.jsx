@@ -37,12 +37,12 @@ const ViewResultsPage = () => {
           <table className="min-w-full table-auto border-collapse border border-gray-300">
             <thead className="bg-blue-100 text-blue-900">
               <tr>
-                <th className="border px-4 py-2 text-left">#</th>
+                <th className="border px-4 py-2 text-left"></th>
                 <th className="border px-4 py-2 text-left">Candidate Name</th>
                 <th className="border px-4 py-2 text-left">Position</th>
                 <th className="border px-4 py-2 text-left">Score</th>
                 <th className="border px-4 py-2 text-left">Submitted At</th>
-                <th className="border px-4 py-2 text-left">Action</th>
+                <th className="border px-4 py-2 text-left">View Results</th>
               </tr>
             </thead>
             <tbody>

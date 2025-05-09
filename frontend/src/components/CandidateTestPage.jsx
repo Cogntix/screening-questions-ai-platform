@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const CandidateTestPage = () => {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
-  const answersRef = useRef([]); // ✅ Track answers reliably
+  const answersRef = useRef([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(900);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const q = JSON.parse(sessionStorage.getItem("questions")) || [];
-    const start = parseInt(sessionStorage.getItem("startTime"), 10);
-    const now = Date.now();
-    const elapsedSec = Math.floor((now - start) / 1000);
-    const remaining = Math.max(900 - elapsedSec, 0);
+    const start = parseInt(sessionStorage.getItem("startTime"), 10)|| Date.now();
+    sessionStorage.setItem("startTime", start);
 
     const initAnswers = q.map((q) => ({
       questionId: q._id.toString(),
@@ -27,20 +27,34 @@ const CandidateTestPage = () => {
     setAnswers(initAnswers);
     answersRef.current = initAnswers;
 
-    setTimeLeft(remaining);
+     
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
+        const now = Date.now();
+        const elapsedSec = Math.floor((now - start) / 1000);
+        const remaining = Math.max(900 - elapsedSec, 0);
+    
+        if (remaining === 60) {
+            toast.warn("⚠️ Only 1 minute left!", { position: "top-center" });
+          }
+          
+        if (remaining <= 0) {
           clearInterval(timer);
-          handleSubmit(); // Auto-submit
-          return 0;
+          handleSubmit();
         }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+    
+        setTimeLeft(remaining);
+      }, 1000);
+    
+      // Auto-save every 30 seconds
+      const autoSave = setInterval(() => {
+        sessionStorage.setItem("autosaveAnswers", JSON.stringify(answersRef.current));
+      }, 30000);
+    
+      return () => {
+        clearInterval(timer);
+        clearInterval(autoSave);
+      };
+    }, []);
 
   const handleOptionToggle = (optionIdx) => {
     const currentQ = questions[currentIndex];
@@ -72,11 +86,12 @@ const CandidateTestPage = () => {
 
     const unanswered = answersRef.current.filter((a) => a.selected.length === 0).length;
     if (unanswered > 0) {
-      const confirmSubmit = window.confirm(
-        `${unanswered} questions are unanswered. Submit anyway?`
-      );
-      if (!confirmSubmit) return;
-    }
+        toast.warn(`${unanswered} unanswered questions. Submitting anyway...`, {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      }
+      
 
     setSubmitting(true);
     try {
@@ -91,7 +106,7 @@ const CandidateTestPage = () => {
       sessionStorage.removeItem("startTime");
       navigate("/test/submitted");
     } catch (err) {
-      alert("Submission failed. Please try again.");
+        toast.error("❌ Submission failed. Please try again.", { position: "top-center" });
       setSubmitting(false);
     }
   };
@@ -164,6 +179,7 @@ const CandidateTestPage = () => {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

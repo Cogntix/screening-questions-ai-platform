@@ -4,6 +4,7 @@ import DashboardNavArrows from "./DashboardNavArrows";
 import { Trash2 } from "lucide-react"; 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const ViewInternsPage = () => {
   const [interns, setInterns] = useState([]);
@@ -57,28 +58,27 @@ const ViewInternsPage = () => {
             <table className="w-full table-auto border border-gray-300 text-sm">
               <thead>
                 <tr className="bg-blue-100 text-left text-sm text-gray-700">
-                  <th className="p-2 border">#</th>
-                  <th className="p-2 border">Full Name</th>
-                  <th className="p-2 border">Position</th>
-                  <th className="p-2 border">Submitted</th>
-                  <th className="p-2 border">Token</th>
-                  <th className="p-2 border">Test Link</th>
-                  <th className="p-2 border">Copy Link</th>
-                  <th className="p-2 border">Password</th>
-                  <th className="p-2 border">Delete</th>
+                  <th className="p-3 border"></th>
+                  <th className="p-3 border">Full Name</th>
+                  <th className="p-3 border">Position</th>
+                  <th className="p-3 border">Submitted</th>
+                  <th className="p-3 border">Test Link</th>
+                  <th className="p-3 border">Copy Link</th>
+                  <th className="p-3 border">Password</th>
+                  <th className="p-3 border">Delete</th>
                 </tr>
               </thead>
               <tbody>
                 {interns.map((intern, index) => {
-                  const testLink = `https://screening.cogntix.com/test/${intern.token}`;
+                  const testLink = `http://localhost:3000/test/${intern.token}`;
+                  //https://screening.cogntix.com
                   return (
                     <tr key={intern._id} className="hover:bg-gray-50">
-                      <td className="p-2 border">{index + 1}</td>
-                      <td className="p-2 border">{intern.fullName}</td>
-                      <td className="p-2 border">{intern.positionId?.positionName || "-"}</td>
-                      <td className="p-2 border">{intern.hasSubmitted ? "✅" : "❌"}</td>
-                      <td className="p-2 border text-xs break-all">{intern.token}</td>
-                      <td className="p-2 border text-xs text-blue-600 underline">
+                      <td className="p-3 border">{index + 1}</td>
+                      <td className="p-3 border">{intern.fullName}</td>
+                      <td className="p-3 border">{intern.positionId?.positionName || "-"}</td>
+                      <td className="p-3 border text-center align-middle ">{intern.hasSubmitted ? <FaCheckCircle className="text-green-600 inline-block"/> : <FaTimesCircle className="text-red-600 inline-block" />}</td>
+                      <td className="p-3 border text-xs text-blue-600 underline">
                         <a href={testLink} target="_blank" rel="noopener noreferrer">
                           Visit Test
                         </a>
