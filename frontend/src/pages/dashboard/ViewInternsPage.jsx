@@ -70,8 +70,7 @@ const ViewInternsPage = () => {
               </thead>
               <tbody>
                 {interns.map((intern, index) => {
-                  const testLink = `http://localhost:3000/test/${intern.token}`;
-                  //https://screening.cogntix.com
+                  const testLink = `https://screening.cogntix.com/test/${intern.token}`;
                   return (
                     <tr key={intern._id} className="hover:bg-gray-50">
                       <td className="p-3 border">{index + 1}</td>
