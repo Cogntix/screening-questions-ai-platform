@@ -91,7 +91,7 @@ const CandidateSubmittedPage = () => {
 
                 return (
                   <div key={i} className="p-4 border rounded bg-white shadow-sm">
-                    <p className="font-medium text-gray-800 mb-2">
+                    <p className="text-base font-semibold text-blue-800 bg-blue-50 px-3 py-2 rounded">
                       {i + 1}. {q.questionText}
                     </p>
 

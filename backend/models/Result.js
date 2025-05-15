@@ -12,6 +12,10 @@ const resultSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Question"
       },
+      questionText: {
+        type: String,
+        required: true
+      },
       questionType: {
         type: String,
         required: true

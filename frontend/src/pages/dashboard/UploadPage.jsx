@@ -93,7 +93,7 @@ const UploadPage = () => {
               loading ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
-            {loading ? "Uploading..." : "Upload PDF & Generate Questions"}
+            {loading ? "Uploading... Wait for one minute to generate questions" : "Upload PDF & Generate Questions"}
           </button>
         </form>
         <DashboardNavArrows backTo="/dashboard" />

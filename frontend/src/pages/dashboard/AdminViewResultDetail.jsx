@@ -65,7 +65,7 @@ const AdminViewResultDetail = () => {
 
             return (
               <div key={i} className="border p-4 rounded bg-white shadow">
-                <p className="font-medium mb-2">{i + 1}. {q.questionText}</p>
+                <p className="text-base font-semibold text-blue-800 bg-blue-50 px-3 py-2 rounded mb-2">{i + 1}. {q.questionText}</p>
                 <div className="space-y-1 text-sm">
                   {q.options?.map((opt, idx) => {
                     const isSelected = q.selectedAnswers?.includes(idx);

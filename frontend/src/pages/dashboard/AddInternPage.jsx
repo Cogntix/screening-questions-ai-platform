@@ -74,6 +74,7 @@ const AddInternPage = () => {
             <label className="block mb-1 font-medium">Full Name</label>
             <input
               type="text"
+              autoComplete="off"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
@@ -85,6 +86,7 @@ const AddInternPage = () => {
             <label className="block mb-1 font-medium">Password</label>
             <input
               type="password"
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
