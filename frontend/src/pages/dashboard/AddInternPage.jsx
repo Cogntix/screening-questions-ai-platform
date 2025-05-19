@@ -3,8 +3,6 @@ import axios from "axios";
 import DashboardNavArrows from "./DashboardNavArrows";
 import { useNavigate } from "react-router-dom";
 
-
-
 const AddInternPage = () => {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
@@ -13,7 +11,6 @@ const AddInternPage = () => {
   const [positions, setPositions] = useState([]);
   const [popup, setPopup] = useState(null);
   const [error, setError] = useState(null);
- 
 
   useEffect(() => {
     const fetchPositions = async () => {
@@ -61,46 +58,49 @@ const AddInternPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4">
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-xl">
-        <h1 className="text-2xl font-bold text-center text-blue-700 mb-6">
-          Add Intern Details
-        </h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-8">
+      <div className="max-w-xl mx-auto bg-white rounded-xl shadow-md p-8 border-2 border-blue-200">
+        <h2 className="text-3xl font-bold text-blue-800 mb-2 text-center">Add Intern Details</h2>
+        <p className="text-blue-600 text-center mb-6">Create new candidate accounts</p>
 
-        {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
+        {error && (
+          <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-6 text-center border border-red-300">
+            {error}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block mb-1 font-medium">Full Name</label>
+            <label className="block text-blue-700 font-medium mb-2">Full Name</label>
             <input
               type="text"
               autoComplete="off"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
-              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-blue-50"
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-medium">Password</label>
+            <label className="block text-blue-700 font-medium mb-2">Password</label>
             <input
               type="password"
               autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-blue-50"
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-medium">Select Position</label>
+            <label className="block text-blue-700 font-medium mb-2">Select Position</label>
             <select
               value={positionId}
               onChange={(e) => setPositionId(e.target.value)}
               required
-              className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-blue-50"
             >
               <option value="">-- Choose Position --</option>
               {positions.map((pos) => (
@@ -113,52 +113,59 @@ const AddInternPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
           >
             Create Candidate
           </button>
         </form>
+        
         <DashboardNavArrows backTo="/dashboard" />
       </div>
 
       {/* Popup Modal */}
       {popup && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full text-center relative">
-            <h2 className="text-xl font-bold text-blue-700 mb-4">{popup.message}</h2>
-            <p className="text-sm text-gray-700 mb-2">
-              <strong>Test Link:</strong><br />
-              <span className="text-gray-600 break-all">{popup.link}</span>
-              <button
-                onClick={() => copyToClipboard(popup.link)}
-                className="ml-2 text-xs text-blue-500 underline"
-              >
-                Copy
-              </button>
-            </p>
-            <p className="text-sm text-gray-700 mb-4">
-              <strong>Password:</strong> {popup.password}
-              <button
-                onClick={() => copyToClipboard(popup.password)}
-                className="ml-2 text-xs text-blue-500 underline"
-              >
-                Copy
-              </button>
-            </p>
+          <div className="bg-white p-8 rounded-xl shadow-xl max-w-md w-full border-2 border-blue-200">
+            <h2 className="text-2xl font-bold text-blue-800 mb-4">{popup.message}</h2>
+            
+            <div className="bg-blue-50 p-4 rounded-lg mb-4 border border-blue-200">
+              <p className="font-medium text-blue-700 mb-1">Test Link:</p>
+              <div className="flex items-center justify-between bg-white p-2 rounded border">
+                <span className="text-sm text-gray-700 truncate">{popup.link}</span>
+                <button
+                  onClick={() => copyToClipboard(popup.link)}
+                  className="ml-2 text-blue-600 hover:text-blue-800"
+                >
+                  📋
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
+              <p className="font-medium text-blue-700 mb-1">Password:</p>
+              <div className="flex items-center justify-between bg-white p-2 rounded border">
+                <span className="text-gray-700">{popup.password}</span>
+                <button
+                  onClick={() => copyToClipboard(popup.password)}
+                  className="ml-2 text-blue-600 hover:text-blue-800"
+                >
+                  📋
+                </button>
+              </div>
+            </div>
+
             <button
-  onClick={() => {
-    setPopup(null);
-    navigate("/dashboard");
-  }}
-  className="mt-2 px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
->
-  Done
-</button>
+              onClick={() => {
+                setPopup(null);
+                navigate("/dashboard");
+              }}
+              className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow hover:shadow-md transition-all"
+            >
+              Done
+            </button>
           </div>
         </div>
-
       )}
-      
     </div>
   );
 };
